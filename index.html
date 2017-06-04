@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>GraphQL Issue Tracker Practice</title>
+
+  <!-- Vue.js -->
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script src="node_modules/vue-router/dist/vue-router.js"></script>
+
+  <!-- Other Dependencies -->
+  <script src="node_modules/axios/dist/axios.js"></script>
+  <script src="node_modules/object-hash/dist/object_hash.js"></script>
+  <script src="node_modules/identicon.js/identicon.js"></script>
+
+  <!-- CSS Reset and Bulma -->
+  <link rel="stylesheet" href="node_modules/minireset.css/minireset.css">
+  <link rel="stylesheet" href="node_modules/bulma/css/bulma.css">
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.css">
+
+  <!-- Application Custom Styles -->
+  <link rel="stylesheet" href="assets/styles/app.css">
+
+</head>
+<body>
+
+<section class="hero is-primary">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        {{ Hero title }}
+      </h1>
+      <h2 class="subtitle">
+        {{ Hero subtitle }}
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Application Content will be here -->
+    <div id="app">
+      <router-view></router-view>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p><strong>GraphQL Issue Tracker Practice</strong></p>
+      <p>
+        <a class="icon" href="https://github.com/example/repo">
+          <i class="fa fa-github"></i>
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- Application Scripts -->
+<script src="assets/scripts/config.js"></script>
+<script src="assets/scripts/util.js"></script>
+<script src="assets/scripts/components-bulma.js"></script>
+<script src="assets/scripts/components.js"></script>
+<script src="assets/scripts/app.js"></script>
+
+</body>
+</html>
