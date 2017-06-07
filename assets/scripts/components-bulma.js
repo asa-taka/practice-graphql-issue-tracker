@@ -38,6 +38,12 @@ Vue.component('bu-panel-block', {
   `
 })
 
+Vue.component('bu-control', {
+  template: `
+
+  `,
+})
+
 Vue.component('bu-panel', {
   template: `
     <nav class="panel">
@@ -63,3 +69,21 @@ Vue.component('bu-panel', {
     </nav>
   `
 })
+
+Vue.component('bu-panel', {
+  props: ['filterItems', 'queryFilter'],
+  template: `
+    <nav class="panel">
+      <p class="panel-heading">
+        <slot name="heading"></slot>
+      </p>
+      <slot></slot>
+    </nav>
+  `
+})
+
+
+const filterItems = [
+  { title: 'All', filter: entries => entries },
+  { title: 'Open', filter: entries => entries },
+]

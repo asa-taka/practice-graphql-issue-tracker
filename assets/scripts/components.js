@@ -20,7 +20,21 @@ Vue.component('issue-list', {
     <div class="issue=list">
       <bu-panel>
         <div slot="heading">Issues</div>
-        <bu-panel-block v-for="i in issues" key="i.id">
+        <div class="panel-block">
+          <p class="control has-icons-left">
+            <input class="input is-small" type="text" placeholder="Search" v-model="filterQuery">
+            <span class="icon is-small is-left">
+              <i class="fa fa-search"></i>
+            </span>
+          </p>
+        </div>
+        <p class="panel-tabs">
+          <a class="is-active">All</a>
+          <a>Unclosed</a>
+          <a>Closed</a>
+          <a>Long Term</a>
+        </p>
+        <bu-panel-block v-for="i in filteredIssues" key="i.id">
           <router-link :to="'/issues/' + i.id">
             {{ i.title }}
           </router-link>
@@ -29,10 +43,19 @@ Vue.component('issue-list', {
     </div>
   `,
   data () {
-    return { issues: [] }
+    return {
+      issues: [],
+      filterQuery: '',
+    }
+  },
+  computed: {
+    filteredIssues () {
+      console.log(this.issues)
+      return queryFilter(this.issues, this.filterQuery)
+    }
   },
   mounted () {
-    graphql({ query: `{ issues { id title }}` }).then(res => this.issues = res.issues)
+    vueGraphqlFetch(this, { query: `{ issues { id title }}` })
   }
 })
 
@@ -40,11 +63,17 @@ Vue.component('activity-line', {
   props: ['activities', 'issueId'],
   template: `
     <div class="activity-list">
-      <activity-form user="lbcat" :issueId="issueId"></activity-form>
-      <activity-item v-for="a in activities" key="a.id" :activity="a">
+      <activity-form user="lbcat" :issueId="issueId">
+      </activity-form>
+      <activity-item v-for="a in sortedActivities" key="a.id" :activity="a">
       </activity-item>
     </div>
   `,
+  computed: {
+    sortedActivities () {
+      return this.activities.slice().reverse() // shallow copy and reverse
+    }
+  },
 
   // component-internal dependencies
   components: {
@@ -63,16 +92,9 @@ Vue.component('activity-line', {
             </p>
           </div>
           <nav class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <a class="button is-info" @click="submit()">Submit</a>
-              </div>
-            </div>
             <div class="level-right">
               <div class="level-item">
-                <label class="checkbox">
-                  <input type="checkbox"> Press enter to submit
-                </label>
+                <a class="button is-info" @click="submit()">Submit</a>
               </div>
             </div>
           </nav>
@@ -82,8 +104,8 @@ Vue.component('activity-line', {
         return { activity: undefined }
       },
       methods: {
-        activityFactory () {
-          return {
+        initializeForm () {
+          this.activity = {
             user: this.user,
             comment: '',
           }
@@ -99,12 +121,11 @@ Vue.component('activity-line', {
               input: this.activity,
               issueId: this.issueId,
             }
-          })
+          }).then(() => this.initializeForm())
         }
       },
       mounted () {
-        console.log(this.activityFactory())
-        this.activity = this.activityFactory()
+        this.initializeForm()
       }
     },
 
@@ -139,11 +160,14 @@ Vue.component('issue-detail', {
   },
   methods: {
     fetch () {
-      graphql({ query: `{ issue(id: ${this.id}) { title activities { id user comment }}}`})
-      .then(res => this.issue = res.issue)
+      vueGraphqlFetch(this, { query: `{ issue(id: ${this.id}) { title activities { id user comment }}}`})
     }
   },
   mounted () {
     this.fetch()
+    setInterval(() => this.fetch(), 3000)
   },
+  destroyed () {
+    console.log('destroy')
+  }
 })
